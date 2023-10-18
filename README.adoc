@@ -1,0 +1,35 @@
+= Fileservice
+
+image:https://img.shields.io/badge/vert.x-4.4.6-purple.svg[link="https://vertx.io"]
+
+== Building
+
+To package application:
+```
+./mvnw package
+```
+
+To install application:
+```
+./mvnw install
+```
+
+To run application:
+```
+./mvnw clean compile exec:java
+```
+
+== Endpoints
+
+* GET http://localhost:8080/status
+* POST http://localhost:8080/download
+
+Body example
+```
+{
+    "url": "https://budget.gov.ru/opendata/7710568760-REGSTATETASK/meta.json",
+    "filename": "meta.json"
+}
+```
+
+
