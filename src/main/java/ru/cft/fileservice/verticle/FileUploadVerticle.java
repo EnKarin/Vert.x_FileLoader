@@ -14,8 +14,8 @@ public class FileUploadVerticle extends AbstractVerticle {
   public void start() {
     vertx.eventBus().consumer("file-save", this::handleUploadEvent);
 
-    ConfigRetriever retriever = ConfigRetriever.create(vertx);
-    retriever.getConfig(config -> {
+    ConfigRetriever.create(vertx)
+      .getConfig(config -> {
       if (config.succeeded()) {
         JsonObject configData = config.result();
         savePath = configData.getString("savePath");
@@ -26,9 +26,10 @@ public class FileUploadVerticle extends AbstractVerticle {
     });
   }
 
-  private void handleUploadEvent(Message<JsonObject> message) {
-    JsonObject fileDto = message.body();
-    Buffer fileContent = fileDto.getBuffer("buffer");
+  private void handleUploadEvent(final Message<JsonObject> message) {
+    final JsonObject fileDto = message.body();
+    final Buffer fileContent = fileDto.getBuffer("buffer");
+
     vertx.fileSystem().writeFile(savePath + fileDto.getString("filename"), fileContent, result -> {
       if (result.succeeded()) {
         vertx.eventBus().send("download-result", "success");

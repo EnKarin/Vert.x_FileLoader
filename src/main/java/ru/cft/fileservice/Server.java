@@ -12,7 +12,7 @@ import ru.cft.fileservice.verticle.FileUploadVerticle;
 
 public class Server extends AbstractVerticle {
 
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(new Server());
     vertx.deployVerticle(new FileUploadVerticle());
@@ -20,8 +20,8 @@ public class Server extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> future) {
-    Router router = Router.router(vertx);
+  public void start(final Promise<Void> future) {
+    final Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
     router.get("/status").handler(this::handleStatus);
     router.post("/download").handler(this::handleDownload);
@@ -36,19 +36,20 @@ public class Server extends AbstractVerticle {
       });
   }
 
-  private void handleStatus(RoutingContext routingContext) {
-    JsonObject json = new JsonObject()
+  private void handleStatus(final RoutingContext routingContext) {
+    final JsonObject json = new JsonObject()
       .put("message", "Application running");
+
     routingContext.response()
       .putHeader("content-type", "application/json")
       .end(json.encodePrettily());
   }
 
-  private void handleDownload(RoutingContext routingContext) {
-    JsonObject data = routingContext.body()
+  private void handleDownload(final RoutingContext routingContext) {
+    final JsonObject data = routingContext.body()
       .asJsonObject();
-    String url = data.getString("url");
-    String fileName = data.getString("filename");
+    final String url = data.getString("url");
+    final String fileName = data.getString("filename");
 
     vertx.eventBus().send("file-download", JsonObject.of("url", url, "filename", fileName));
 
